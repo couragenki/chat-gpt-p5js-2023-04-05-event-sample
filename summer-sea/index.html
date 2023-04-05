@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>動く夏の砂浜と波のアニメーション</title>
+    <title>複雑な夏の砂浜と波のアニメーション</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
       body {
@@ -15,19 +15,36 @@
   <body>
     <script>
       let waves = [];
+      let sandParticles = [];
+      let numParticles = 300;
 
       function setup() {
         createCanvas(windowWidth, windowHeight);
         for (let i = 0; i < 5; i++) {
           waves.push(new Wave());
         }
+        for (let i = 0; i < numParticles; i++) {
+          sandParticles.push(new SandParticle());
+        }
       }
 
       function draw() {
-        background(255, 228, 196); // 砂浜の色
+        background(240, 230, 140); // 砂浜の色
+
+        // 斜め上から差し込む日光の表現
+        drawingContext.shadowOffsetX = -40;
+        drawingContext.shadowOffsetY = -40;
+        drawingContext.shadowBlur = 20;
+        drawingContext.shadowColor = 'rgba(255, 255, 255, 0.5)';
+
         for (let wave of waves) {
           wave.update();
           wave.show();
+        }
+
+        // 砂浜のパーティクル
+        for (let particle of sandParticles) {
+          particle.show();
         }
       }
 
@@ -47,7 +64,7 @@
 
         show() {
           noFill();
-          stroke(135, 206, 250, 150); // 波の色
+          stroke(70, 130, 180, 150); // 波の色
           strokeWeight(2);
           beginShape();
           for (let x = 0; x < width; x++) {
@@ -55,6 +72,20 @@
             vertex(x, y);
           }
           endShape();
+        }
+      }
+
+      class SandParticle {
+        constructor() {
+          this.x = random(width);
+          this.y = random(height * 0.7, height);
+          this.size = random(1, 3);
+        }
+
+        show() {
+          fill(244, 164, 96); // 砂粒の色
+          noStroke();
+          circle(this.x, this.y, this.size);
         }
       }
     </script>
