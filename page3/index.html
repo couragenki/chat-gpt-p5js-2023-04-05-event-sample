@@ -6,7 +6,7 @@
     <title>流体シミュレーション</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-    <script src="https://rawcdn.githack.com/kripken/ammo.js/aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ammo.js/0.0.1-nightly.20200915/ammo.js"></script>
     <style>
       body {
         margin: 0;
@@ -78,16 +78,17 @@
         return scene;
       };
 
-      const scene = await createScene();
+      (async () => {
+        const scene = await createScene();
 
-      engine.runRenderLoop(function () {
-        scene.render();
-      });
+        engine.runRenderLoop(function () {
+          scene.render();
+        });
 
-      window.addEventListener('resize', function () {
-        engine.resize();
-      });
+        window.addEventListener('resize', function () {
+          engine.resize();
+        });
+      })();
     </script>
   </body>
 </html>
-
