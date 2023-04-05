@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>花の描画と動き</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+</head>
+<body>
+  <script>
+    // 花の色
+    let color1, color2, color3, color4, color5, color6;
+    // 花の座標
+    let x, y;
+    // 花びらの回転速度
+    let angle = 0;
+    
+    function setup() {
+      // キャンバスの作成
+      createCanvas(windowWidth, windowHeight);
+      
+      // 色の設定
+      color1 = color(255, 0, 0);
+      color2 = color(255, 255, 0);
+      color3 = color(0, 255, 0);
+      color4 = color(0, 255, 255);
+      color5 = color(0, 0, 255);
+      color6 = color(255, 0, 255);
+      
+      // 座標の初期化
+      x = width/2;
+      y = height/2;
+    }
+    
+    function draw() {
+      // 背景色の設定
+      background(220);
+      
+      // 花を描画
+      drawFlower(x, y, angle, 150, 50, color1, color2, color3, color4, color5, color6);
+      
+      // 花びらの回転
+      angle += 0.01;
+    }
+    
+    // 花を描画する関数
+    function drawFlower(x, y, angle, size, petalSize, color1, color2, color3, color4, color5, color6) {
+      push();
+      translate(x, y);
+      rotate(angle);
+      scale(size/100);
+      
+      noStroke();
+      fill(color1);
+      ellipse(0, 0, petalSize, petalSize);
+      rotate(PI/3);
+      fill(color2);
+      ellipse(0, 0, petalSize, petalSize);
+      rotate(PI/3);
+      fill(color3);
+      ellipse(0, 0, petalSize, petalSize);
+      rotate(PI/3);
+      fill(color4);
+      ellipse(0, 0, petalSize, petalSize);
+      rotate(PI/3);
+      fill(color5);
+      ellipse(0, 0, petalSize, petalSize);
+      rotate(PI/3);
+      fill(color6);
+      ellipse(0, 0, petalSize, petalSize);
+      pop();
+    }
+  </script>
+</body>
+</html>
