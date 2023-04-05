@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>宇宙と流れ星、海の波のアニメーション</title>
+    <title>動く夏の砂浜と波のアニメーション</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
       body {
@@ -14,82 +14,20 @@
   </head>
   <body>
     <script>
-      let stars = [];
-      let shootingStars = [];
       let waves = [];
 
       function setup() {
         createCanvas(windowWidth, windowHeight);
-        for (let i = 0; i < 200; i++) {
-          stars.push(new Star());
-        }
-
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
           waves.push(new Wave());
         }
       }
 
       function draw() {
-        background(0);
-        for (let star of stars) {
-          star.show();
-        }
-
-        if (random() < 0.05) {
-          shootingStars.push(new ShootingStar());
-        }
-
-        for (let i = shootingStars.length - 1; i >= 0; i--) {
-          shootingStars[i].update();
-          shootingStars[i].show();
-          if (shootingStars[i].offscreen()) {
-            shootingStars.splice(i, 1);
-          }
-        }
-
+        background(255, 228, 196); // 砂浜の色
         for (let wave of waves) {
           wave.update();
           wave.show();
-        }
-      }
-
-      class Star {
-        constructor() {
-          this.x = random(width);
-          this.y = random(height);
-          this.size = random(0.5, 2);
-        }
-
-        show() {
-          fill(255);
-          noStroke();
-          circle(this.x, this.y, this.size);
-        }
-      }
-
-      class ShootingStar {
-        constructor() {
-          this.x = random(width);
-          this.y = 0;
-          this.vx = random(-1, 1);
-          this.vy = random(5, 10);
-          this.alpha = 255;
-        }
-
-        update() {
-          this.x += this.vx;
-          this.y += this.vy;
-          this.alpha -= 5;
-        }
-
-        show() {
-          stroke(255, this.alpha);
-          strokeWeight(2);
-          line(this.x, this.y, this.x - this.vx * 10, this.y - this.vy * 10);
-        }
-
-        offscreen() {
-          return this.y > height || this.alpha < 0;
         }
       }
 
@@ -109,12 +47,11 @@
 
         show() {
           noFill();
-          stroke(0, 191, 255, 150);
+          stroke(135, 206, 250, 150); // 波の色
           strokeWeight(2);
           beginShape();
           for (let x = 0; x < width; x++) {
             let y = this.y + sin((x / this.period) * TWO_PI + this.phase) * this.amplitude;
-            vertex
             vertex(x, y);
           }
           endShape();
