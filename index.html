@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>宇宙と流れ星のアニメーション</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let stars = [];
+      let shootingStars = [];
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+        for (let i = 0; i < 200; i++) {
+          stars.push(new Star());
+        }
+      }
+
+      function draw() {
+        background(0);
+        for (let star of stars) {
+          star.show();
+        }
+
+        if (random() < 0.05) {
+          shootingStars.push(new ShootingStar());
+        }
+
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+          shootingStars[i].update();
+          shootingStars[i].show();
+          if (shootingStars[i].offscreen()) {
+            shootingStars.splice(i, 1);
+          }
+        }
+      }
+
+      class Star {
+        constructor() {
+          this.x = random(width);
+          this.y = random(height);
+          this.size = random(0.5, 2);
+        }
+
+        show() {
+          fill(255);
+          noStroke();
+          circle(this.x, this.y, this.size);
+        }
+      }
+
+      class ShootingStar {
+        constructor() {
+          this.x = random(width);
+          this.y = 0;
+          this.vx = random(-1, 1);
+          this.vy = random(5, 10);
+          this.alpha = 255;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= 5;
+        }
+
+        show() {
+          stroke(255, this.alpha);
+          strokeWeight(2);
+          line(this.x, this.y, this.x - this.vx * 10, this.y - this.vy * 10);
+        }
+
+        offscreen() {
+          return this.y > height || this.alpha < 0;
+        }
+      }
+    </script>
+  </body>
+</html>
+
