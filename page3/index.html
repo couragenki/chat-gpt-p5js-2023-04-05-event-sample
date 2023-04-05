@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>流体シミュレーション</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ammo@3.0.3/lib/index.min.js"></script>
     <style>
       body {
         margin: 0;
@@ -27,68 +25,50 @@
       const canvas = document.getElementById('renderCanvas');
       const engine = new BABYLON.Engine(canvas, true);
 
-      const createScene = async function () {
+      const createScene = function () {
         const scene = new BABYLON.Scene(engine);
-        const gravityVector = new BABYLON.Vector3(0, -9.81, 0);
-        const physicsPlugin = new BABYLON.AmmoJSPlugin();
-        scene.enablePhysics(gravityVector, physicsPlugin);
 
-        const camera = new BABYLON.ArcRotateCamera('camera1', Math.PI / 2, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
-        camera.setPosition(new BABYLON.Vector3(0, 5, -10));
+        const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 4, 10, new BABYLON.Vector3(0, 0, 0), scene);
         camera.attachControl(canvas, true);
 
-        const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
-        light.intensity = 0.7;
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        const ground = BABYLON.Mesh.CreateGround('ground1', 20, 20, 2, scene);
-        ground.position.y = -1;
-        ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
+        const particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
+        particleSystem.particleTexture = new BABYLON.Texture("https://www.babylonjs.com/assets/textures/flare.png", scene);
+        particleSystem.minSize = 0.1;
+        particleSystem.maxSize = 0.3;
 
-        const particleMaterial = new BABYLON.StandardMaterial('particleMaterial', scene);
-        particleMaterial.diffuseColor = new BABYLON.Color3(0.1, 0.1, 1);
-        particleMaterial.specularColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+        particleSystem.createConeEmitter(1, Math.PI / 4);
+        particleSystem.emitRate = 500;
+        particleSystem.minLifeTime = 1;
+        particleSystem.maxLifeTime = 1.5;
+        particleSystem.minEmitPower = 1;
+        particleSystem.maxEmitPower = 3;
 
-        const particles = [];
+        particleSystem.addVelocityGradient(0, 1);
+        particleSystem.addVelocityGradient(1, 0);
 
-        const particleRadius = 0.2;
-        const particleMass = 0.1;
-        const particleRestitution = 0.8;
+        particleSystem.addDragGradient(0, 0);
+        particleSystem.addDragGradient(1, 1);
 
-        for (let i = 0; i < 100; i++) {
-          const particle = BABYLON.MeshBuilder.CreateSphere('particle' + i, { diameter: particleRadius * 2 }, scene);
-          particle.material = particleMaterial;
-          particle.position = new BABYLON.Vector3(Math.random() * 8 - 4, 5 + Math.random() * 3, Math.random() * 8 - 4);
-          particle.physicsImpostor = new BABYLON.PhysicsImpostor(particle, BABYLON.PhysicsImpostor.SphereImpostor, { mass: particleMass, restitution: particleRestitution }, scene);
-          particles.push(particle);
-        }
+        particleSystem.addSizeGradient(0, 0);
+        particleSystem.addSizeGradient(1, 1);
 
-        scene.registerBeforeRender(function () {
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const distance = BABYLON.Vector3.Distance(particles[i].position, particles[j].position);
-              if (distance < particleRadius * 2) {
-                const force = particles[i].position.subtract(particles[j].position).normalize().scale((particleRadius * 2 - distance) * particleMass);
-                particles[i].physicsImpostor.applyForce(force, particles[i].position);
-                particles[j].physicsImpostor.applyForce(force.scale(-1), particles[j].position);
-              }
-            }
-          }
-        });
+        particleSystem.gravity = new BABYLON.Vector3(0, -1, 0);
+        particleSystem.start();
 
         return scene;
       };
 
-      (async () => {
-        const scene = await createScene();
+      const scene = createScene();
 
-        engine.runRenderLoop(function () {
-          scene.render();
-        });
+      engine.runRenderLoop(function () {
+        scene.render();
+      });
 
-        window.addEventListener('resize', function () {
-          engine.resize();
-        });
-      })();
+      window.addEventListener('resize', function () {
+        engine.resize();
+      });
     </script>
   </body>
 </html>
