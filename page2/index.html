@@ -2,73 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>花の描画と動き</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+  <title>水の描画と動き</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.1.3/pixi.min.js"></script>
 </head>
 <body>
   <script>
-    // 花の色
-    let color1, color2, color3, color4, color5, color6;
-    // 花の座標
-    let x, y;
-    // 花びらの回転速度
-    let angle = 0;
+    // アプリケーションの作成
+    const app = new PIXI.Application({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      backgroundColor: 0x1099bb
+    });
     
-    function setup() {
-      // キャンバスの作成
-      createCanvas(windowWidth, windowHeight);
+    // キャンバスをHTMLに追加
+    document.body.appendChild(app.view);
+    
+    // 水のスプライトの作成
+    const waterTexture = PIXI.Texture.from('https://i.imgur.com/D5vD8.png');
+    const water = new PIXI.Sprite(waterTexture);
+    water.anchor.set(0.5);
+    water.x = app.renderer.width / 2;
+    water.y = app.renderer.height / 2;
+    app.stage.addChild(water);
+    
+    // 水の動きを更新する関数
+    function updateWater(delta) {
+      // 時間に基づいて水の位置を変更
+      water.x += Math.sin(delta / 1000) * 5;
+      water.y += Math.cos(delta / 1000) * 5;
       
-      // 色の設定
-      color1 = color(255, 0, 0);
-      color2 = color(255, 255, 0);
-      color3 = color(0, 255, 0);
-      color4 = color(0, 255, 255);
-      color5 = color(0, 0, 255);
-      color6 = color(255, 0, 255);
-      
-      // 座標の初期化
-      x = width/2;
-      y = height/2;
+      // 時間に基づいて水の角度を変更
+      water.rotation += delta / 2000;
     }
     
-    function draw() {
-      // 背景色の設定
-      background(220);
-      
-      // 花を描画
-      drawFlower(x, y, angle, 150, 50, color1, color2, color3, color4, color5, color6);
-      
-      // 花びらの回転
-      angle += 0.01;
-    }
-    
-    // 花を描画する関数
-    function drawFlower(x, y, angle, size, petalSize, color1, color2, color3, color4, color5, color6) {
-      push();
-      translate(x, y);
-      rotate(angle);
-      scale(size/100);
-      
-      noStroke();
-      fill(color1);
-      ellipse(0, 0, petalSize, petalSize);
-      rotate(PI/3);
-      fill(color2);
-      ellipse(0, 0, petalSize, petalSize);
-      rotate(PI/3);
-      fill(color3);
-      ellipse(0, 0, petalSize, petalSize);
-      rotate(PI/3);
-      fill(color4);
-      ellipse(0, 0, petalSize, petalSize);
-      rotate(PI/3);
-      fill(color5);
-      ellipse(0, 0, petalSize, petalSize);
-      rotate(PI/3);
-      fill(color6);
-      ellipse(0, 0, petalSize, petalSize);
-      pop();
-    }
+    // アニメーションのループ
+    app.ticker.add((delta) => {
+      updateWater(delta);
+    });
   </script>
 </body>
 </html>
