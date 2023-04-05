@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>動く水のアニメーション</title>
+    <title>リアルな水のアニメーション</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
@@ -37,17 +37,22 @@
         camera.attachControl(canvas, false);
 
         const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+        const dirLight = new BABYLON.DirectionalLight('dirLight', new BABYLON.Vector3(-1, -2, 1), scene);
+        dirLight.position = new BABYLON.Vector3(20, 40, -20);
+        dirLight.intensity = 0.5;
 
         const ground = BABYLON.Mesh.CreateGround('ground1', 16, 16, 100, scene);
 
         const waterMaterial = new BABYLON.WaterMaterial('waterMaterial', scene);
         waterMaterial.backFaceCulling = true;
         waterMaterial.bumpTexture = new BABYLON.Texture('https://assets.babylonjs.com/environments/waterbump.png', scene);
-        waterMaterial.windForce = -10;
-        waterMaterial.waveHeight = 0.5;
-        waterMaterial.bumpHeight = 0.1;
+        waterMaterial.windForce = -5;
+        waterMaterial.waveHeight = 0.8;
+        waterMaterial.bumpHeight = 0.15;
         waterMaterial.waveLength = 0.1;
-        waterMaterial.waveSpeed = 50.0;
+        waterMaterial.waveSpeed = 100.0;
+        waterMaterial.colorBlendFactor = 0.2;
+        waterMaterial.colorBlendFactor = 0.5;
 
         const waterMesh = BABYLON.Mesh.CreateGround('waterMesh', 16, 16, 100, scene);
         waterMesh.position.y = 1;
@@ -58,7 +63,7 @@
 
         return scene;
       };
-
+      
       const scene = createScene();
 
       engine.runRenderLoop(function () {
@@ -71,3 +76,4 @@
     </script>
   </body>
 </html>
+
